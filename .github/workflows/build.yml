@@ -1,7 +1,5 @@
 name: Build
-on:
-  push:
-  pull_request:
+on: [push]
 
 jobs:
   win:
@@ -12,18 +10,9 @@ jobs:
         shell: msys2 {0}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Setup MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          pacboy: >-
-            cmake:p
-            ninja:p
-            gcc:p
       - name: Install SDK
         id: install_sdk
         uses: WerWolv/imhex-download-sdk@v1.32.2
@@ -44,14 +33,14 @@ jobs:
           name: windows-build
           path: build/install
   macos:
-    runs-on: macos-14
+    runs-on: macos-12
     name: MacOS
     defaults:
       run:
         shell: bash {0}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           submodules: recursive
       - name: Install SDK
@@ -61,8 +50,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          CC=$(brew --prefix gcc@14)/bin/gcc-14                                                         \
-          CXX=$(brew --prefix gcc@14)/bin/g++-14                                                        \
+          CC=$(brew --prefix gcc@12)/bin/gcc-12                                                         \
+          CXX=$(brew --prefix gcc@12)/bin/g++-12                                                        \
           OBJC=$(brew --prefix llvm)/bin/clang                                                          \
           OBJCXX=$(brew --prefix llvm)/bin/clang++                                                      \
           PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig":"$(brew --prefix)/lib/pkgconfig"     \
@@ -78,38 +67,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: build/install
-  linux:
-    runs-on: ubuntu-24.04
-    name: Linux
-    defaults:
-      run:
-        shell: bash {0}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build gcc g++
-      - name: Install SDK
-        id: install_sdk
-        uses: WerWolv/imhex-download-sdk@v1.32.2
-      - name: Build
-        run: |
-          mkdir build
-          cd build
-          IMHEX_SDK_PATH="${{ steps.install_sdk.outputs.sdk_path }}" \
-            cmake -G Ninja                                           \
-            -DCMAKE_BUILD_TYPE=Release                               \
-            -DCMAKE_INSTALL_PREFIX="./install"                       \
-            ..
-          cmake --build .
-          cmake --install .
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
           path: build/install

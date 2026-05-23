@@ -43,9 +43,7 @@ namespace {
             ImGui::InputInt("Count", &m_count);
             ImGui::Separator();
             ImGui::SameLine();
-            //Put buttons for manipulating the view (like moving the offset by a page, etc.) here, also allow the user to define how big a page is (like 16, 32, 64 colors, etc.)
             if (ImGui::Button("<<< Page")) {
-                //Move back by a page, but not less than 0. Use the defined page size for this.
                 m_offset = (m_offset >= m_cols * m_cell_size * m_page_size) ? m_offset - m_cols * m_cell_size * m_page_size : 0;
             }
             ImGui::SameLine();
@@ -54,13 +52,11 @@ namespace {
             }
 
             ImGui::SameLine();
-            //Move back by a single color
             if (ImGui::Button("< Color")) {
                 m_offset = (m_offset >= 2) ? m_offset - 2 : 0;
             }
 
             ImGui::SameLine();
-            //Move forward by a single color 
             if (ImGui::Button("> Color")) {
                 m_offset = (m_offset + 2 < provider->getActualSize()) ? m_offset + 2 : m_offset;
             }
@@ -70,7 +66,6 @@ namespace {
             }
             ImGui::SameLine();
             if (ImGui::Button("Page >>>")) {
-                //Move forward by a page, but not beyond the end. Use the defined page size for this.
                 m_offset = (m_offset + m_cols * m_cell_size * m_page_size < provider->getActualSize()) ? m_offset + m_cols * m_cell_size * m_page_size : m_offset;
             }
             ImGui::SameLine();
@@ -104,7 +99,7 @@ namespace {
                     hex::log::warn("Lock to Cursor: no selection");
                 }
             }
-            //Define page size using floating point input box
+
             ImGui::SameLine();
             ImGui::SetNextItemWidth(80);
             ImGui::InputInt("Page Size", &m_page_size);
@@ -112,7 +107,6 @@ namespace {
             ImGui::SameLine();
             ImGui::Checkbox("Auto-Scroll", &m_auto_scroll);
             if (m_auto_scroll) {
-                //Automatically scroll down
                 m_auto_scroll_timer += ImGui::GetIO().DeltaTime;
                 if (m_auto_scroll_timer >= 1.0f / m_auto_scroll_speed) {
                     m_auto_scroll_timer = 0.0f;
@@ -120,7 +114,7 @@ namespace {
                 }
             }
             ImGui::SameLine();
-            //Input for auto-scroll speed
+\
             ImGui::SetNextItemWidth(80);
             ImGui::InputFloat("Scroll Speed (rows/s)", &m_auto_scroll_speed);
             if (m_auto_scroll_speed < 0.1f) m_auto_scroll_speed = 0.1f;
@@ -182,7 +176,6 @@ namespace {
                 if (ImGui::IsWindowHovered()) {
                     float wheel = ImGui::GetIO().MouseWheel;
                     if (wheel != 0.0f) {
-                        // scroll one row per tick; hold Ctrl to scroll a full page
                         int step = ImGui::GetIO().KeyCtrl ? m_page_size * m_cols : m_cols;
                         if (wheel > 0.0f) {
                             m_offset = (m_offset >= static_cast<u32>(step * 2)) ? m_offset - step * 2 : 0;
@@ -245,7 +238,7 @@ namespace {
         int m_page_size = 16;
         bool m_locked_to_cursor = false;
         bool m_auto_scroll = false;
-        float m_auto_scroll_speed = 1.0f; // Number of rows to scroll per second
+        float m_auto_scroll_speed = 1.0f; 
         float m_auto_scroll_timer = 0.0f;
     };
 

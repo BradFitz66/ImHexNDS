@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+add_imhex_plugin(
+    NAME    @PLUGIN_NAME@
+    SOURCES "@SOURCE_FILE@"
+    INCLUDES "@CMAKE_SOURCE_DIR@/include"
+)

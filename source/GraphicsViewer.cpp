@@ -176,9 +176,8 @@ namespace {
             int avail_tiles = (m_offset < file_size)
                 ? (int)((file_size - m_offset) / TILE_BYTES) : 0;
             int total_rows  = (avail_tiles + m_tiles_wide - 1) / m_tiles_wide;
-            int content_h   = total_rows * tile_px;
 
-            ImGui::SetNextWindowContentSize(ImVec2((float)canvas_w, (float)content_h));
+            ImGui::SetNextWindowContentSize(ImVec2((float)canvas_w, 0.0f));
             if (ImGui::BeginChild("##gfxcanvas", ImVec2(-205, 0), false,
                     ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
 
@@ -199,10 +198,9 @@ namespace {
 
                 ImDrawList *dl       = ImGui::GetWindowDrawList();
                 ImVec2      origin   = ImGui::GetCursorScreenPos();
-                float       scroll_y = ImGui::GetScrollY();
-                int         first_row = (int)(scroll_y / tile_px);
+                int         first_row = 0;
                 int         vis_rows  = (int)(ImGui::GetWindowHeight() / tile_px) + 2;
-                int         last_row  = std::min(first_row + vis_rows, total_rows);
+                int         last_row  = std::min(vis_rows, total_rows);
 
                 // Drag-select: update state from mouse position
                 {
@@ -326,7 +324,7 @@ namespace {
                     dl->AddRect({sx, sy}, {ex, ey}, drag_bord, 0, 0, 1.5f);
                 }
 
-                ImGui::Dummy({(float)canvas_w, (float)content_h});
+                ImGui::Dummy({(float)canvas_w, 0.0f});
             }
             ImGui::EndChild();
             ImGui::SameLine();

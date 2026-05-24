@@ -229,9 +229,7 @@ namespace {
                 if (ImGui::IsWindowHovered()) {
                     float wheel = ImGui::GetIO().MouseWheel;
                     if (wheel != 0.0f) {
-                        // Default: 1 row (matches << Line / >> Line buttons)
                         int step = m_cols * 2;
-                        // Ctrl = page, Shift = single color
                         if (ImGui::GetIO().KeyCtrl) {
                             step = m_cols * m_cell_size * m_page_size;
                         } else if (ImGui::GetIO().KeyShift) {
@@ -336,10 +334,8 @@ namespace {
             if (s_state.renaming_palette) {
                 ImGui::OpenPopup("Rename Palette");
                 s_state.renaming_palette = false;
-                // Keep renaming_palette_key set so the popup can read it
             }
 
-            // Rename palette popup
             ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
             if (ImGui::BeginPopupModal("Rename Palette", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 static char name_buf[64] = "";
@@ -366,14 +362,12 @@ namespace {
                 ImGui::EndPopup();
             }
 
-            // Keep shared state in sync so the project handler can save it
             s_state.offset    = m_offset;
             s_state.cols      = m_cols;
             s_state.cell_size = m_cell_size;
             s_state.count     = m_count;
             s_state.page_size = m_page_size;
 
-            // Broadcast palette offset to other plugins when it changes
             if (m_offset != m_last_broadcast_offset) {
                 m_last_broadcast_offset = m_offset;
                 hex::EventManager::post<hex::EventNDSPaletteOffsetChanged>(m_offset, true);

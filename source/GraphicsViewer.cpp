@@ -426,7 +426,6 @@ namespace {
             }
             ImGui::EndChild();
 
-            // Keep shared state in sync so the project handler can save it
             s_gfx_state.offset         = m_offset;
             s_gfx_state.tiles_wide     = m_tiles_wide;
             s_gfx_state.zoom           = m_zoom;
